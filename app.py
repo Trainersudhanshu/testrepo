@@ -1,23 +1,38 @@
-# app.py
+from flask import Flask, jsonify, request, abort
 
-from flask import Flask 
-from urllib.parse import quote 
+app = Flask(__name__)
 
-def create_app():
-    x=10
-    y=100
-    z=2000000000
-    app = Flask(__name__)
+@app.route('/')
+def home():
+    return jsonify(message="Welcome to the Flask app!")
 
-    @app.route('/')
-    def home():
-        return 'GFGGGGGG'
+@app.route('/greet/<name>')
+def greet(name):
+    if not name.isalpha():
+        abort(400, description="Invalid name")
+    return jsonify(message=f"Hello, {name}!")
 
-    return app
+@app.route('/add', methods=['POST'])
+def add():
+    data = request.get_json()
+    if not data or 'a' not in data or 'b' not in data:
+        abort(400, description="Missing required parameters")
+    
+    try:
+        a = int(data['a'])
+        b = int(data['b'])
+    except ValueError:
+        abort(400, description="Parameters must be integers")
+    
+    return jsonify(result=a + b)
 
-def a():
-    a()
+@app.errorhandler(400)
+def bad_request(error):
+    return jsonify(error=str(error)), 400
+
+@app.errorhandler(404)
+def not_found(error):
+    return jsonify(error="Not Found"), 404
 
 if __name__ == '__main__':
-    app = create_app()
-    app.run(host='0.0.0.0', port=80, debug=True)
+    app.run(debug=True, port=80)
