@@ -12,15 +12,6 @@ def create_app():
     @app.route('/')
     def home():
         return 'GFGGGGGG'
-    @app.route('/')
-    def home():
-        return 'GFGGGGGG'
-    @app.route('/')
-    def home():
-        return 'GFGGGGGG'
-    @app.route('/')
-    def home():
-        return 'GFGGGGGG'
 
     return app
 
